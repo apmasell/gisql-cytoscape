@@ -1,0 +1,3 @@
+[submodule "gisql"]
+	path = gisql
+	url = ../gisql
