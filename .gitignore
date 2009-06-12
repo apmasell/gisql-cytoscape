@@ -1,0 +1,6 @@
+*.class
+bin
+build
+cytoscape
+dist
+gisql.jar

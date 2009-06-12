@@ -1,0 +1,10 @@
+#plugin.props
+pluginName=gisQL
+pluginDescription=Genetic interactome set query language interface.
+pluginVersion=1.0
+cytoscapeVersion=2.5
+pluginCategory=Network Inference
+projectURL=http://meyhil.wlu.ca/
+pluginAuthorsInstitutions=Andre Masella:WLU
+releaseDate=July 1, 2009
+themeOnly=no
