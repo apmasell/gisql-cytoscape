@@ -10,6 +10,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+import ca.wlu.gisql.cytoscape.LoggingAdapter;
 import ca.wlu.gisql.cytoscape.LoginAction;
 import ca.wlu.gisql.cytoscape.ToCyNetwork;
 import ca.wlu.gisql.environment.parser.Parser;
@@ -28,6 +29,7 @@ public class GisQLPlugin extends CytoscapePlugin {
 	public GisQLPlugin() {
 		super();
 		Parser.addParseable(ToCyNetwork.descriptor);
+		Logger.getRootLogger().addAppender(new LoggingAdapter());
 
 		Cytoscape.getDesktop().getCyMenus().addCytoscapeAction(
 				new LoginAction(properties));

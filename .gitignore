@@ -1,6 +1,6 @@
 *.class
-bin
-build
-cytoscape
-dist
-gisql.jar
+/bin
+/build
+/cytoscape
+/dist
+/gisql.jar
