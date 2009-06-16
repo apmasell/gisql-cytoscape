@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
-import javax.swing.ToolTipManager;
+import javax.swing.tree.TreeSelectionModel;
 
 import ca.wlu.gisql.environment.UserEnvironment;
 import ca.wlu.gisql.gui.BusyDialog;
@@ -32,17 +32,18 @@ public class Container extends JPanel implements ActionListener, TaskParent {
 			this);
 
 	private InteractomeTask<Container> task = null;
-	private final JTree variablelist = new JTree();
+	private final JTree variablelist;
 
-	private final JScrollPane variablelistPane = new JScrollPane(variablelist);
+	private final JScrollPane variablelistPane;
 
 	public Container(UserEnvironment environment) {
 		super();
 		environmentTree = new EnvironmentTreeView(environment);
-		variablelist.setModel(environmentTree);
-		ToolTipManager.sharedInstance().registerComponent(variablelist);
-		variablelist.setCellRenderer(new InteractomeTreeCellRender(
-				environmentTree));
+		variablelist = new JTree(environmentTree);
+		variablelist.setCellRenderer(new InteractomeTreeCellRender());
+		variablelist.getSelectionModel().setSelectionMode(
+				TreeSelectionModel.SINGLE_TREE_SELECTION);
+		variablelistPane = new JScrollPane(variablelist);
 
 		command = new CommandBox(environment);
 		command.setActionListener(this);

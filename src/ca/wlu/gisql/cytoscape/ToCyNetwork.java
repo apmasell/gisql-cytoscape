@@ -6,9 +6,10 @@ import java.util.Stack;
 
 import ca.wlu.gisql.environment.Environment;
 import ca.wlu.gisql.environment.parser.Literal;
-import ca.wlu.gisql.environment.parser.NextTask;
 import ca.wlu.gisql.environment.parser.Parseable;
 import ca.wlu.gisql.environment.parser.Parser;
+import ca.wlu.gisql.environment.parser.Token;
+import ca.wlu.gisql.environment.parser.ast.AstNode;
 import ca.wlu.gisql.graph.Gene;
 import ca.wlu.gisql.graph.Interaction;
 import ca.wlu.gisql.interactome.Interactome;
@@ -20,12 +21,48 @@ import cytoscape.Cytoscape;
 import cytoscape.data.Semantics;
 
 public class ToCyNetwork implements Interactome {
+	static class AstCyNetwork implements AstNode {
+		private AstNode parameter;
+
+		public AstCyNetwork(AstNode parameter) {
+			this.parameter = parameter;
+		}
+
+		public Interactome asInteractome() {
+			return new ToCyNetwork(parameter.asInteractome());
+		}
+
+		public AstNode fork(AstNode substitute) {
+			return new AstCyNetwork(parameter.fork(substitute));
+		}
+
+		public boolean isInteractome() {
+			return true;
+		}
+
+		public PrintStream show(PrintStream print) {
+			parameter.show(print);
+			print.print(" @ *");
+			return print;
+		}
+
+		public StringBuilder show(StringBuilder sb) {
+			parameter.show(sb);
+			sb.append(" @ *");
+			return sb;
+		}
+	}
+
 	public final static Parseable descriptor = new Parseable() {
 
-		public Interactome construct(Environment environment,
-				List<Object> params, Stack<String> error) {
-			Interactome interactome = (Interactome) params.get(0);
-			return new ToCyNetwork(interactome);
+		public AstNode construct(Environment environment, List<AstNode> params,
+				Stack<String> error) {
+			AstNode interactome = params.get(0);
+			if (interactome.isInteractome()) {
+				return new AstCyNetwork(interactome);
+			} else {
+				return null;
+			}
 		}
 
 		public int getNestingLevel() {
@@ -50,8 +87,8 @@ public class ToCyNetwork implements Interactome {
 			return sb;
 		}
 
-		public NextTask[] tasks(Parser parser) {
-			return new NextTask[] { new Literal(parser, '*') };
+		public Token[] tasks(Parser parser) {
+			return new Token[] { new Literal(parser, '*') };
 		}
 
 	};
@@ -80,10 +117,6 @@ public class ToCyNetwork implements Interactome {
 		return membership;
 	}
 
-	public Interactome fork(Interactome substitute) {
-		return new ToCyNetwork(source.fork(substitute));
-	}
-
 	public int getPrecedence() {
 		return descriptor.getNestingLevel();
 	}
@@ -94,10 +127,6 @@ public class ToCyNetwork implements Interactome {
 
 	public double membershipOfUnknown() {
 		return source.membershipOfUnknown();
-	}
-
-	public boolean needsFork() {
-		return source.needsFork();
 	}
 
 	public int numGenomes() {

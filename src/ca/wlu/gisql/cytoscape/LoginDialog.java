@@ -15,8 +15,8 @@ import javax.swing.SwingConstants;
 
 import org.apache.log4j.Logger;
 
+import ca.wlu.gisql.db.DatabaseEnvironment;
 import ca.wlu.gisql.db.DatabaseManager;
-import ca.wlu.gisql.environment.DatabaseEnvironment;
 import ca.wlu.gisql.environment.UserEnvironment;
 import cytoscape.Cytoscape;
 import cytoscape.view.cytopanels.CytoPanel;
