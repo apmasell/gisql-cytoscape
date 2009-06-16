@@ -30,19 +30,21 @@ public class GisQLPlugin extends CytoscapePlugin {
 		super();
 		Parser.addParseable(ToCyNetwork.descriptor);
 		Logger.getRootLogger().addAppender(new LoggingAdapter());
+		
+		restoreInitState();
 
 		Cytoscape.getDesktop().getCyMenus().addCytoscapeAction(
 				new LoginAction(properties));
 	}
 
 	public void onCytoscapeExit() {
-		if (properties != null) {
-			try {
-				properties.store(new FileOutputStream(propertiesfile),
-						"gisql database configuration");
-			} catch (Exception e) {
-				log.error("Failed to save gisQL configuration.", e);
-			}
+		try {
+			/* Do not save the raw password to the file. */
+			properties.remove("password");
+			properties.store(new FileOutputStream(propertiesfile),
+					"gisql database configuration");
+		} catch (Exception e) {
+			log.error("Failed to save gisQL configuration.", e);
 		}
 	}
 
@@ -60,10 +62,13 @@ public class GisQLPlugin extends CytoscapePlugin {
 			} else {
 				try {
 					properties.load(is);
+					log.info("Loaded properties from file.");
 				} catch (IOException e) {
 					log.fatal("Error while reading properties.", e);
 				}
 			}
+		} else {
+			log.info("No properties file to read.");
 		}
 	}
 
