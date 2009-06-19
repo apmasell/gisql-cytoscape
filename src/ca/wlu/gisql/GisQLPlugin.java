@@ -30,7 +30,7 @@ public class GisQLPlugin extends CytoscapePlugin {
 		super();
 		Parser.addParseable(ToCyNetwork.descriptor);
 		Logger.getRootLogger().addAppender(new LoggingAdapter());
-		
+
 		restoreInitState();
 
 		Cytoscape.getDesktop().getCyMenus().addCytoscapeAction(

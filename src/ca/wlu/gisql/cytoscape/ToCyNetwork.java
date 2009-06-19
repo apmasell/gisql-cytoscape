@@ -1,6 +1,5 @@
 package ca.wlu.gisql.cytoscape;
 
-import java.io.PrintStream;
 import java.util.List;
 import java.util.Stack;
 
@@ -13,7 +12,8 @@ import ca.wlu.gisql.environment.parser.ast.AstNode;
 import ca.wlu.gisql.graph.Gene;
 import ca.wlu.gisql.graph.Interaction;
 import ca.wlu.gisql.interactome.Interactome;
-import ca.wlu.gisql.interactome.InteractomeUtil;
+import ca.wlu.gisql.util.ShowablePrintWriter;
+import ca.wlu.gisql.util.ShowableStringBuilder;
 import cytoscape.CyEdge;
 import cytoscape.CyNetwork;
 import cytoscape.CyNode;
@@ -36,20 +36,17 @@ public class ToCyNetwork implements Interactome {
 			return new AstCyNetwork(parameter.fork(substitute));
 		}
 
+		public int getPrecedence() {
+			return descriptor.getPrecedence();
+		}
+
 		public boolean isInteractome() {
 			return true;
 		}
 
-		public PrintStream show(PrintStream print) {
-			parameter.show(print);
+		public void show(ShowablePrintWriter print) {
+			print.print(parameter, getPrecedence());
 			print.print(" @ *");
-			return print;
-		}
-
-		public StringBuilder show(StringBuilder sb) {
-			parameter.show(sb);
-			sb.append(" @ *");
-			return sb;
 		}
 	}
 
@@ -65,8 +62,8 @@ public class ToCyNetwork implements Interactome {
 			}
 		}
 
-		public int getNestingLevel() {
-			return 0;
+		public int getPrecedence() {
+			return Parser.PREC_ASSIGN;
 		}
 
 		public boolean isMatchingOperator(char c) {
@@ -77,14 +74,8 @@ public class ToCyNetwork implements Interactome {
 			return false;
 		}
 
-		public PrintStream show(PrintStream print) {
+		public void show(ShowablePrintWriter print) {
 			print.print("Create Cytoscape Network: A @ *");
-			return null;
-		}
-
-		public StringBuilder show(StringBuilder sb) {
-			sb.append("Create Cytoscape Network: A @ *");
-			return sb;
 		}
 
 		public Token[] tasks(Parser parser) {
@@ -118,7 +109,7 @@ public class ToCyNetwork implements Interactome {
 	}
 
 	public int getPrecedence() {
-		return descriptor.getNestingLevel();
+		return descriptor.getPrecedence();
 	}
 
 	public Type getType() {
@@ -127,10 +118,6 @@ public class ToCyNetwork implements Interactome {
 
 	public double membershipOfUnknown() {
 		return source.membershipOfUnknown();
-	}
-
-	public int numGenomes() {
-		return source.numGenomes();
 	}
 
 	public boolean postpare() {
@@ -142,20 +129,13 @@ public class ToCyNetwork implements Interactome {
 		return source.prepare();
 	}
 
-	public PrintStream show(PrintStream print) {
-		InteractomeUtil.precedenceShow(print, source, this.getPrecedence());
+	public void show(ShowablePrintWriter print) {
+		print.print(source, this.getPrecedence());
 		print.print(" @ *");
-		return print;
-	}
-
-	public StringBuilder show(StringBuilder sb) {
-		InteractomeUtil.precedenceShow(sb, source, this.getPrecedence());
-		sb.append(" @ *");
-		return sb;
 	}
 
 	public String toString() {
-		return show(new StringBuilder()).toString();
+		return ShowableStringBuilder.toString(this);
 	}
 
 }
