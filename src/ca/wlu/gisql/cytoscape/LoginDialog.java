@@ -131,6 +131,7 @@ public class LoginDialog extends JDialog implements ActionListener {
 				return;
 			}
 			environment = new UserEnvironment(new DatabaseEnvironment(dm));
+			environment.getParserKb().addParseable(ToCyNetwork.descriptor);
 
 			Container container = new Container(environment);
 			CytoPanel panel = Cytoscape.getDesktop().getCytoPanel(

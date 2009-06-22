@@ -12,8 +12,6 @@ import org.apache.log4j.Logger;
 
 import ca.wlu.gisql.cytoscape.LoggingAdapter;
 import ca.wlu.gisql.cytoscape.LoginAction;
-import ca.wlu.gisql.cytoscape.ToCyNetwork;
-import ca.wlu.gisql.environment.parser.Parser;
 import cytoscape.Cytoscape;
 import cytoscape.CytoscapeInit;
 import cytoscape.plugin.CytoscapePlugin;
@@ -28,7 +26,6 @@ public class GisQLPlugin extends CytoscapePlugin {
 
 	public GisQLPlugin() {
 		super();
-		Parser.addParseable(ToCyNetwork.descriptor);
 		Logger.getRootLogger().addAppender(new LoggingAdapter());
 
 		restoreInitState();
