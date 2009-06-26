@@ -9,6 +9,7 @@ import ca.wlu.gisql.environment.Environment;
 import ca.wlu.gisql.environment.parser.Literal;
 import ca.wlu.gisql.environment.parser.Parseable;
 import ca.wlu.gisql.environment.parser.Parser;
+import ca.wlu.gisql.environment.parser.ParserKnowledgebase;
 import ca.wlu.gisql.environment.parser.Token;
 import ca.wlu.gisql.environment.parser.ast.AstNode;
 import ca.wlu.gisql.graph.Gene;
@@ -76,7 +77,7 @@ public class ToCyNetwork implements Interactome {
 			return false;
 		}
 
-		public void show(ShowablePrintWriter print) {
+		public void show(ShowablePrintWriter<ParserKnowledgebase> print) {
 			print.print("Create Cytoscape Network: A @ *");
 		}
 
