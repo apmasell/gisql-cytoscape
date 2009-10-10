@@ -1,3 +1,6 @@
 [submodule "gisql"]
 	path = gisql
 	url = ../gisql
+[submodule "gisql-gui"]
+	path = gisql-gui
+	url = ../gisql-gui

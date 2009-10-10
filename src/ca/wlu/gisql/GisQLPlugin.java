@@ -34,6 +34,7 @@ public class GisQLPlugin extends CytoscapePlugin {
 				new LoginAction(properties));
 	}
 
+	@Override
 	public void onCytoscapeExit() {
 		try {
 			/* Do not save the raw password to the file. */

@@ -1,20 +1,14 @@
 package ca.wlu.gisql.cytoscape;
 
-import java.util.List;
 import java.util.Set;
-import java.util.Stack;
 
-import ca.wlu.gisql.GisQL;
-import ca.wlu.gisql.environment.Environment;
-import ca.wlu.gisql.environment.parser.Literal;
-import ca.wlu.gisql.environment.parser.Parseable;
-import ca.wlu.gisql.environment.parser.Parser;
-import ca.wlu.gisql.environment.parser.ParserKnowledgebase;
-import ca.wlu.gisql.environment.parser.Token;
-import ca.wlu.gisql.environment.parser.ast.AstNode;
+import ca.wlu.gisql.Membership;
+import ca.wlu.gisql.annotation.GisqlConstructorFunction;
 import ca.wlu.gisql.graph.Gene;
 import ca.wlu.gisql.graph.Interaction;
 import ca.wlu.gisql.interactome.Interactome;
+import ca.wlu.gisql.interactome.ProcessableInteractome;
+import ca.wlu.gisql.parser.Parser;
 import ca.wlu.gisql.util.ShowablePrintWriter;
 import ca.wlu.gisql.util.ShowableStringBuilder;
 import cytoscape.CyEdge;
@@ -23,70 +17,9 @@ import cytoscape.CyNode;
 import cytoscape.Cytoscape;
 import cytoscape.data.Semantics;
 
-public class ToCyNetwork implements Interactome {
-	static class AstCyNetwork implements AstNode {
-		private AstNode parameter;
-
-		public AstCyNetwork(AstNode parameter) {
-			this.parameter = parameter;
-		}
-
-		public Interactome asInteractome() {
-			return new ToCyNetwork(parameter.asInteractome());
-		}
-
-		public AstNode fork(AstNode substitute) {
-			return new AstCyNetwork(parameter.fork(substitute));
-		}
-
-		public int getPrecedence() {
-			return descriptor.getPrecedence();
-		}
-
-		public boolean isInteractome() {
-			return true;
-		}
-
-		public void show(ShowablePrintWriter<AstNode> print) {
-			print.print(parameter, getPrecedence());
-			print.print(" @ *");
-		}
-	}
-
-	public final static Parseable descriptor = new Parseable() {
-
-		public AstNode construct(Environment environment, List<AstNode> params,
-				Stack<String> error) {
-			AstNode interactome = params.get(0);
-			if (interactome.isInteractome()) {
-				return new AstCyNetwork(interactome);
-			} else {
-				return null;
-			}
-		}
-
-		public int getPrecedence() {
-			return Parser.PREC_ASSIGN;
-		}
-
-		public boolean isMatchingOperator(char c) {
-			return c == '@';
-		}
-
-		public boolean isPrefixed() {
-			return false;
-		}
-
-		public void show(ShowablePrintWriter<ParserKnowledgebase> print) {
-			print.print("Create Cytoscape Network: A @ *");
-		}
-
-		public Token[] tasks(Parser parser) {
-			return new Token[] { new Literal(parser, '*') };
-		}
-
-	};
-
+@GisqlConstructorFunction(name="cytoscape", description="Converts an interactome to a Cytoscape network.")
+public class ToCyNetwork extends ProcessableInteractome {
+	
 	private CyNetwork network;
 
 	private Interactome source;
@@ -114,22 +47,22 @@ public class ToCyNetwork implements Interactome {
 	}
 
 	public Set<Interactome> collectAll(Set<Interactome> set) {
-		set.add(this);
 		return source.collectAll(set);
 	}
 
 	public int getPrecedence() {
-		return descriptor.getPrecedence();
+		return Parser.PREC_LITERAL;
 	}
 
-	public Type getType() {
-		return source.getType();
+	public Construction getConstruction() {
+		return source.getConstruction();
 	}
 
 	public double membershipOfUnknown() {
 		return source.membershipOfUnknown();
 	}
 
+	@Override
 	public boolean postpare() {
 		return source.postpare();
 	}
@@ -141,11 +74,12 @@ public class ToCyNetwork implements Interactome {
 
 	public void show(ShowablePrintWriter<Set<Interactome>> print) {
 		print.print(source, this.getPrecedence());
-		print.print(" @ *");
+		print.print(" :cytoscape");
 	}
 
+	@Override
 	public String toString() {
-		return ShowableStringBuilder.toString(this, GisQL.collectAll(this));
+		return ShowableStringBuilder.toString(this, Membership.collectAll(this));
 	}
 
 }

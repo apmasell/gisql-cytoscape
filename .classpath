@@ -6,5 +6,6 @@
 	<classpathentry kind="lib" path="gisql/lib/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="cytoscape/lib/giny.jar"/>
 	<classpathentry kind="lib" path="cytoscape/cytoscape.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/gisql-gui"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

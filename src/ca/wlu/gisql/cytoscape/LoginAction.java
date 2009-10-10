@@ -3,7 +3,17 @@ package ca.wlu.gisql.cytoscape;
 import java.awt.event.ActionEvent;
 import java.util.Properties;
 
+import javax.swing.SwingConstants;
+
+import ca.wlu.gisql.db.DatabaseEnvironment;
+import ca.wlu.gisql.db.DatabaseManager;
+import ca.wlu.gisql.environment.ParserEnvironment;
+import ca.wlu.gisql.environment.UserEnvironment;
+import ca.wlu.gisql.gui.login.LoginDialog;
+import cytoscape.Cytoscape;
 import cytoscape.util.CytoscapeAction;
+import cytoscape.view.cytopanels.CytoPanel;
+import cytoscape.view.cytopanels.CytoPanelState;
 
 public class LoginAction extends CytoscapeAction {
 
@@ -17,8 +27,19 @@ public class LoginAction extends CytoscapeAction {
 		setPreferredMenu("Plugins");
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent event) {
-		LoginDialog.connect(properties);
+		DatabaseManager dm = LoginDialog.connect(Cytoscape.getDesktop(),
+				properties);
+		UserEnvironment environment = new UserEnvironment(
+				new DatabaseEnvironment(dm));
+		ParserEnvironment.self.add(ToCyNetwork.class);
+
+		Container container = new Container(environment);
+		CytoPanel panel = Cytoscape.getDesktop().getCytoPanel(
+				SwingConstants.WEST);
+		panel.add("gisQL Console", null, container, "gisQL Console");
+		panel.setState(CytoPanelState.DOCK);
 	}
 
 }

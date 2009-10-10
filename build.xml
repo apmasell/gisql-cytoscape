@@ -4,18 +4,19 @@
 		<property name="plugin_name" value="gisql"/>
 		<property name="plugin_class" value="ca.wlu.gisql.GisQLPlugin"/>
 		<property name="project.jar" value="${plugin_name}.jar"/>
-		<property name="version" value="1.1"/>
+		<property name="version" value="1.2"/>
 		<property name="year" value="2009"/>
 		<echo message="Building plugin ${plugin_name} version ${version}..."/>
 
 		<!-- Define the plugin directories -->
 		<property name="root.dir" value="."/>
 		<property name="gisql.root.dir" value="gisql"/>
-		<property name="src.dir" value="${root.dir}/src:${gisql.root.dir}/src"/>
+		<property name="gisqlgui.root.dir" value="gisql-gui"/>
+		<property name="src.dir" value="${root.dir}/src:${gisql.root.dir}/src:${gisqlgui.root.dir}/src"/>
 		<property name="build.dir" value="${root.dir}/build"/>
 		<property name="images.dir" value="${root.dir}/images"/>
 		<property name="manifest.dir" value="${root.dir}/manifest"/>
-		<property name="lib.dir" value="${root.dir}/lib:${gisql.root.dir}/lib"/>
+		<property name="lib.dir" value="${root.dir}/lib:${gisql.root.dir}/lib:${gisqlgui.root.dir}/lib"/>
 
 		<!-- Define the Cytoscape directories -->
 		<property name="cytoscape.dir" value="cytoscape"/>
@@ -42,11 +43,14 @@
 			<fileset dir="${gisql.root.dir}/lib">
 				<include name="**/*.jar"/>
 			</fileset>
+			<fileset dir="${gisqlgui.root.dir}/lib">
+				<include name="**/*.jar"/>
+			</fileset>
 		</path>
 		<path id="project.class.path">
 			<pathelement location="${cytoscape.dir}/cytoscape.jar"/>
 			<pathelement path="${java.class.path}/"/>
-			<pathelement path="${repack.libs}/"/>
+			<path refid="repack.libs"/>
 		</path>
 	</target>
 	<target name="compile" depends="init">
