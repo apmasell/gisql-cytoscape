@@ -5,9 +5,9 @@ import java.util.Properties;
 
 import javax.swing.SwingConstants;
 
+import ca.wlu.gisql.ast.util.BuiltInResolver;
 import ca.wlu.gisql.db.DatabaseEnvironment;
 import ca.wlu.gisql.db.DatabaseManager;
-import ca.wlu.gisql.environment.ParserEnvironment;
 import ca.wlu.gisql.environment.UserEnvironment;
 import ca.wlu.gisql.gui.login.LoginDialog;
 import cytoscape.Cytoscape;
@@ -33,7 +33,7 @@ public class LoginAction extends CytoscapeAction {
 				properties);
 		UserEnvironment environment = new UserEnvironment(
 				new DatabaseEnvironment(dm));
-		ParserEnvironment.self.add(ToCyNetwork.class);
+		BuiltInResolver.addDefault(ToCyNetwork.class);
 
 		Container container = new Container(environment);
 		CytoPanel panel = Cytoscape.getDesktop().getCytoPanel(

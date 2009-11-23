@@ -2,15 +2,13 @@ package ca.wlu.gisql.cytoscape;
 
 import java.util.Set;
 
-import ca.wlu.gisql.Membership;
 import ca.wlu.gisql.annotation.GisqlConstructorFunction;
 import ca.wlu.gisql.graph.Gene;
 import ca.wlu.gisql.graph.Interaction;
 import ca.wlu.gisql.interactome.Interactome;
 import ca.wlu.gisql.interactome.ProcessableInteractome;
-import ca.wlu.gisql.parser.Parser;
+import ca.wlu.gisql.util.Precedence;
 import ca.wlu.gisql.util.ShowablePrintWriter;
-import ca.wlu.gisql.util.ShowableStringBuilder;
 import cytoscape.CyEdge;
 import cytoscape.CyNetwork;
 import cytoscape.CyNode;
@@ -50,8 +48,8 @@ public class ToCyNetwork extends ProcessableInteractome {
 		return source.collectAll(set);
 	}
 
-	public int getPrecedence() {
-		return Parser.PREC_LITERAL;
+	public Precedence getPrecedence() {
+		return Precedence.Value;
 	}
 
 	public Construction getConstruction() {
@@ -75,11 +73,6 @@ public class ToCyNetwork extends ProcessableInteractome {
 	public void show(ShowablePrintWriter<Set<Interactome>> print) {
 		print.print(source, this.getPrecedence());
 		print.print(" :cytoscape");
-	}
-
-	@Override
-	public String toString() {
-		return ShowableStringBuilder.toString(this, Membership.collectAll(this));
 	}
 
 }
