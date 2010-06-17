@@ -11,6 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.tree.TreeSelectionModel;
 
+import ca.wlu.gisql.ast.AstNode;
 import ca.wlu.gisql.ast.type.Type;
 import ca.wlu.gisql.environment.UserEnvironment;
 import ca.wlu.gisql.gui.CommandBox;
@@ -79,6 +80,11 @@ public class Container extends JPanel implements ActionListener,
 	public void reportErrors(Collection<ExpressionError> errors) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public boolean previewAst(AstNode node) {
+		return true;
 	}
 
 }
