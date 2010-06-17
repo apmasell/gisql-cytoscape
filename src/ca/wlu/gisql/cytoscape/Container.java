@@ -41,6 +41,7 @@ public class Container extends JPanel implements ActionListener,
 		super();
 		runner = new ThreadedExpressionRunner(environment,
 				new SwingThreadBouncer(this));
+		runner.start();
 		environmentTree = new EnvironmentTreeView(environment);
 		variablelist = new JTree(environmentTree);
 		variablelist.setCellRenderer(new InteractomeTreeCellRender());
